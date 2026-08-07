@@ -1,0 +1,164 @@
+// BigFix Script: CrowdStrike, Trellix, Rapid7, and BES Detection Report
+// Purpose: Generate a report of all systems running CrowdStrike, Trellix, Rapid7, and BES services
+// Author: Generated for reporting compliance
+// Date Created: 2026-08-07
+
+// ============================================================================
+// DETECTION RELEVANCE
+// ============================================================================
+
+// CrowdStrike Detection
+relevance: exists service "CrowdStrike Sensor"
+relevance: exists file "C:\Program Files\CrowdStrike\CSFalconService.exe"
+relevance: exists file "/opt/CrowdStrike/falcond"
+relevance: exists registry key "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\CSAgent"
+
+// Trellix Detection
+relevance: exists service "Trellix*"
+relevance: exists file "C:\Program Files\Trellix\*"
+relevance: exists registry key "HKEY_LOCAL_MACHINE\SOFTWARE\Trellix"
+
+// Rapid7 Detection (InsightAgent/Nexpose)
+relevance: exists service "IR Agent" OR exists service "Rapid7 Insight Agent"
+relevance: exists file "C:\Program Files\Rapid7\Insight Agent\*"
+relevance: exists file "/opt/rapid7/ir_agent/*"
+relevance: exists registry key "HKEY_LOCAL_MACHINE\SOFTWARE\Rapid7"
+
+// BES (BigFix Enterprise Server) Client Detection
+relevance: exists service "BESClient"
+relevance: exists file "C:\Program Files\BigFix Enterprise\BES Client\*"
+relevance: exists file "/opt/BESClient/*"
+relevance: exists registry key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\Enterprise Server"
+
+// ============================================================================
+// PROPERTY DEFINITIONS FOR REPORTING
+// ============================================================================
+
+property "Computer Name" = computer name
+property "OS" = operating system
+property "OS Version" = os version of operating system
+property "IP Address" = ip address of first network adapter
+
+// CrowdStrike Properties
+property "CrowdStrike Installed" = 
+  (exists service "CrowdStrike Sensor" OR 
+   exists file "C:\Program Files\CrowdStrike\CSFalconService.exe" OR
+   exists file "/opt/CrowdStrike/falcond" OR
+   exists registry key "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\CSAgent")
+
+property "CrowdStrike Service Status" = 
+  (if exists service "CrowdStrike Sensor" then "Running" else "Not Detected")
+
+// Trellix Properties
+property "Trellix Installed" = 
+  (exists service "Trellix*" OR 
+   exists file "C:\Program Files\Trellix\*" OR
+   exists registry key "HKEY_LOCAL_MACHINE\SOFTWARE\Trellix")
+
+property "Trellix Service Status" = 
+  (if exists service "Trellix*" then "Running" else "Not Detected")
+
+// Rapid7 Properties
+property "Rapid7 Installed" = 
+  (exists service "IR Agent" OR 
+   exists service "Rapid7 Insight Agent" OR
+   exists file "C:\Program Files\Rapid7\Insight Agent\*" OR
+   exists file "/opt/rapid7/ir_agent/*" OR
+   exists registry key "HKEY_LOCAL_MACHINE\SOFTWARE\Rapid7")
+
+property "Rapid7 Service Status" = 
+  (if (exists service "IR Agent" OR exists service "Rapid7 Insight Agent") then "Running" else "Not Detected")
+
+// BES (BigFix) Properties
+property "BES Client Installed" = 
+  (exists service "BESClient" OR 
+   exists file "C:\Program Files\BigFix Enterprise\BES Client\*" OR
+   exists file "/opt/BESClient/*" OR
+   exists registry key "HKEY_LOCAL_MACHINE\SOFTWARE\BigFix\Enterprise Server")
+
+property "BES Client Service Status" = 
+  (if exists service "BESClient" then "Running" else "Not Detected")
+
+// ============================================================================
+// COMBINED SECURITY STATUS
+// ============================================================================
+
+property "Security Services Summary" = 
+  (
+    (if exists service "CrowdStrike Sensor" then "CrowdStrike " else "") +
+    (if exists service "Trellix*" then "Trellix " else "") +
+    (if (exists service "IR Agent" OR exists service "Rapid7 Insight Agent") then "Rapid7 " else "") +
+    (if exists service "BESClient" then "BES " else "") +
+    (if not (exists service "CrowdStrike Sensor" OR exists service "Trellix*" OR exists service "IR Agent" OR exists service "Rapid7 Insight Agent" OR exists service "BESClient") then "None Detected" else "")
+  )
+
+property "Security Score" = 
+  (
+    (if exists service "CrowdStrike Sensor" then 25 else 0) +
+    (if exists service "Trellix*" then 25 else 0) +
+    (if (exists service "IR Agent" OR exists service "Rapid7 Insight Agent") then 25 else 0) +
+    (if exists service "BESClient" then 25 else 0)
+  )
+
+// ============================================================================
+// COMPLIANCE PROPERTY
+// ============================================================================
+
+property "Compliance Status" = 
+  (
+    if (exists service "CrowdStrike Sensor" AND 
+        (exists service "Trellix*" OR exists service "IR Agent" OR exists service "Rapid7 Insight Agent") AND
+        exists service "BESClient") 
+    then "Fully Compliant"
+    else if (exists service "CrowdStrike Sensor" AND exists service "BESClient")
+    then "Partially Compliant"
+    else "Non-Compliant"
+  )
+
+// ============================================================================
+// REPORTING ACTIONS
+// ============================================================================
+
+wait /S
+
+// Report Summary
+report "================================================================================"
+report "SYSTEM SECURITY AGENT REPORT"
+report "================================================================================"
+report ""
+report "System: {Computer Name}"
+report "Operating System: {OS} {OS Version}"
+report "IP Address: {IP Address}"
+report ""
+report "AGENT STATUS:"
+report "  CrowdStrike: {CrowdStrike Service Status}"
+report "  Trellix: {Trellix Service Status}"
+report "  Rapid7: {Rapid7 Service Status}"
+report "  BES Client: {BES Client Service Status}"
+report ""
+report "SECURITY SUMMARY: {Security Services Summary}"
+report "SECURITY SCORE: {Security Score}/100"
+report "COMPLIANCE: {Compliance Status}"
+report "================================================================================"
+report ""
+
+// ============================================================================
+// REMEDIATION NOTES
+// ============================================================================
+
+// Systems missing critical services should be flagged for:
+// 1. Verify deployment packages are available
+// 2. Check network connectivity and proxy settings
+// 3. Review deployment logs for installation failures
+// 4. Check firewall rules blocking agent communication
+// 5. Verify service account permissions
+// 6. Consider manual installation if automated deployment fails
+
+// RECOMMENDED MINIMUM CONFIGURATION:
+// - CrowdStrike: Required for EDR (Endpoint Detection & Response)
+// - Trellix OR Rapid7: Required for antivirus/malware protection or vulnerability scanning
+// - BES Client: Required for patch management and compliance
+
+// ============================================================================
+// END OF SCRIPT
+// ============================================================================
