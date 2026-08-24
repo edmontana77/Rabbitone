@@ -1,0 +1,211 @@
+<html>
+<head>
+<title>Windows 11 Version Dashboard</title>
+
+https://www.gstatic.com/charts/loader.jsscript>
+
+<script type="text/javascript">
+
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawCharts);
+
+function drawCharts() {
+
+var data = google.visualization.arrayToDataTable([
+['Version','Count'],
+
+['21H2', <?relevance number of bes computers whose (exists result (bes property "Windows 11 Version") whose (value of it = "21H2") of it) ?>],
+
+['22H2', <?relevance number of bes computers whose (exists result (bes property "Windows 11 Version") whose (value of it = "22H2") of it) ?>],
+
+['23H2', <?relevance number of bes computers whose (exists result (bes property "Windows 11 Version") whose (value of it = "23H2") of it) ?>],
+
+['24H2', <?relevance number of bes computers whose (exists result (bes property "Windows 11 Version") whose (value of it = "24H2") of it) ?>],
+
+['25H2', <?relevance number of bes computers whose (exists result (bes property "Windows 11 Version") whose (value of it = "25H2") of it) ?>],
+
+['26H2', <?relevance number of bes computers whose (exists result (bes property "Windows 11 Version") whose (value of it = "26H2") of it) ?>]
+]);
+
+var piechart =
+new google.visualization.PieChart(
+document.getElementById('piechart'));
+
+piechart.draw(data,
+{
+title:'Windows 11 Version Distribution',
+width:700,
+height:400
+});
+
+var barchart =
+new google.visualization.ColumnChart(
+document.getElementById('barchart'));
+
+barchart.draw(data,
+{
+title:'Windows 11 Version Counts',
+width:700,
+height:400,
+legend:{position:'none'}
+});
+
+}
+</script>
+
+<style>
+
+body{
+font-family:Segoe UI, Arial;
+margin:20px;
+background:#f7f8fa;
+}
+
+h1{
+color:#003366;
+}
+
+.kpi{
+display:inline-block;
+width:180px;
+margin:8px;
+padding:15px;
+background:white;
+border-radius:8px;
+box-shadow:0 1px 5px rgba(0,0,0,.15);
+text-align:center;
+}
+
+.kpivalue{
+font-size:30px;
+font-weight:bold;
+color:#0078d4;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+}
+
+th{
+background:#0078d4;
+color:white;
+padding:10px;
+}
+
+td{
+padding:8px;
+border:1px solid #dcdcdc;
+}
+
+.chartrow{
+display:flex;
+flex-wrap:wrap;
+justify-content:space-between;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Windows 11 Version Dashboard</h1>
+
+<div class="kpi">
+Total Devices
+<div class="kpivalue">
+<?relevance number of bes computers whose (exists result (bes property "Windows 11 Version") of it) ?>
+</div>
+</div>
+
+<div class="kpi">
+23H2
+<div class="kpivalue">
+<?relevance number of bes computers whose (exists result (bes property "Windows 11 Version") whose (value of it = "23H2") of it) ?>
+</div>
+</div>
+
+<div class="kpi">
+24H2
+<div class="kpivalue">
+<?relevance number of bes computers whose (exists result (bes property "Windows 11 Version") whose (value of it = "24H2") of it) ?>
+</div>
+</div>
+
+<h2>Version Summary</h2>
+
+<table>
+<tr>
+<th>Version</th>
+<th>Device Count</th>
+</tr>
+
+<tr>
+<td>21H2</td>
+<td><?relevance number of bes computers whose (exists result (bes property "Windows 11 Version") whose (value of it = "21H2") of it) ?></td>
+</tr>
+
+<tr>
+<td>22H2</td>
+<td><?relevance number of bes computers whose (exists result (bes property "Windows 11 Version") whose (value of it = "22H2") of it) ?></td>
+</tr>
+
+<tr>
+<td>23H2</td>
+<td><?relevance number of bes computers whose (exists result (bes property "Windows 11 Version") whose (value of it = "23H2") of it) ?></td>
+</tr>
+
+<tr>
+<td>24H2</td>
+<td><?relevance number of bes computers whose (exists result (bes property "Windows 11 Version") whose (value of it = "24H2") of it) ?></td>
+</tr>
+
+<tr>
+<td>25H2</td>
+<td><?relevance number of bes computers whose (exists result (bes property "Windows 11 Version") whose (value of it = "25H2") of it) ?></td>
+</tr>
+
+<tr>
+<td>26H2</td>
+<td><?relevance number of bes computers whose (exists result (bes property "Windows 11 Version") whose (value of it = "26H2") of it) ?></td>
+</tr>
+
+</table>
+
+<br>
+
+<div class="chartrow">
+<div id="piechart"></div>
+<div id="barchart"></div>
+</div>
+
+<h2>Device Details</h2>
+
+<table>
+
+<tr>
+<th>Computer Name</th>
+<th>Windows Version</th>
+<th>Last Report Time</th>
+</tr>
+
+<?relevance
+concatenation of trs of
+(
+td of name of it &
+td of value of result (bes property "Windows 11 Version") of it &
+td of (last report time of it as string)
+)
+of bes computers
+whose
+(
+exists result (bes property "Windows 11 Version") of it
+)
+?>
+
+</table>
+
+</body>
+</html>
