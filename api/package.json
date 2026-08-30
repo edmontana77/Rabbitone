@@ -1,0 +1,19 @@
+{
+  "name": "bigfix-inventory-sync-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "REST API that syncs computer and software inventory data from HCL BigFix Inventory and serves it for internal reports/dashboards.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "node-cron": "^4.6.0"
+  }
+}
